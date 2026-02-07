@@ -3,17 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <title>Memory Game</title>
+
+    <!-- Link CSS -->
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <h1>Memory Game</h1>
-    <h2>Score: <span id="score">100</span></h2>
+    <h1>🧠 Memory Game</h1>
 
-    <div class="game-board" id="gameBoard">
-        <!-- Cards will be created using JavaScript -->
+    <!-- Game Info -->
+    <div class="info">
+        <p><strong>Score:</strong> <span id="score">100</span></p>
+        <p><strong>Moves:</strong> <span id="moves">0</span></p>
+        <p><strong>Matches:</strong> <span id="matches">0</span></p>
     </div>
 
+    <!-- Restart Button -->
+    <button id="restartBtn">🔄 Restart Game</button>
+
+    <!-- Instructions -->
+    <ul class="instructions">
+        <li>Click two cards to find matching Greek alphabets.</li>
+        <li>Each wrong match deducts 4 points.</li>
+        <li>Game ends when score reaches 0 or all cards are matched.</li>
+    </ul>
+
+    <!-- Game Board -->
+    <div class="game-board" id="gameBoard"></div>
+
+    <!-- Link JavaScript -->
     <script src="script.js"></script>
+
 </body>
 </html>
+
