@@ -1,40 +1,49 @@
-// Greek alphabet symbols (pairs)
 const symbols = ['α', 'β', 'γ', 'δ', 'ε', 'ζ', 'η', 'θ'];
-
-// Create pairs of cards
 let cards = [...symbols, ...symbols];
 
-// Initial score
 let score = 100;
+let moves = 0;
+let matches = 0;
 
-// Variables to track card state
 let firstCard = null;
 let secondCard = null;
 let lockBoard = false;
 
-// Get HTML elements
 const gameBoard = document.getElementById("gameBoard");
 const scoreDisplay = document.getElementById("score");
+const movesDisplay = document.getElementById("moves");
+const matchesDisplay = document.getElementById("matches");
+const restartBtn = document.getElementById("restartBtn");
 
-// Shuffle cards
-cards.sort(() => 0.5 - Math.random());
+function initGame() {
+    gameBoard.innerHTML = "";
+    score = 100;
+    moves = 0;
+    matches = 0;
+    firstCard = null;
+    secondCard = null;
+    lockBoard = false;
 
-// Create card elements dynamically
-cards.forEach(symbol => {
-    const card = document.createElement("div");
-    card.classList.add("card");
-    card.innerText = "?";
-    card.dataset.symbol = symbol;
+    scoreDisplay.innerText = score;
+    movesDisplay.innerText = moves;
+    matchesDisplay.innerText = matches;
 
-    card.addEventListener("click", flipCard);
-    gameBoard.appendChild(card);
-});
+    cards.sort(() => 0.5 - Math.random());
 
-// Function to handle card flip
+    cards.forEach(symbol => {
+        const card = document.createElement("div");
+        card.classList.add("card");
+        card.innerText = "?";
+        card.dataset.symbol = symbol;
+
+        card.addEventListener("click", flipCard);
+        gameBoard.appendChild(card);
+    });
+}
+
 function flipCard() {
     if (lockBoard) return;
     if (this === firstCard || this.classList.contains("matched")) return;
-
 
     this.classList.add("flipped");
     this.innerText = this.dataset.symbol;
@@ -45,21 +54,22 @@ function flipCard() {
     }
 
     secondCard = this;
+    moves++;
+    movesDisplay.innerText = moves;
     checkMatch();
 }
 
-// Function to check if cards match
 function checkMatch() {
-   if (firstCard.dataset.symbol === secondCard.dataset.symbol) {
-    firstCard.classList.add("matched");
-    secondCard.classList.add("matched");
-    resetTurn();
-    checkGameEnd();
-}
- else {
+    if (firstCard.dataset.symbol === secondCard.dataset.symbol) {
+        firstCard.classList.add("matched");
+        secondCard.classList.add("matched");
+        matches++;
+        matchesDisplay.innerText = matches;
+        resetTurn();
+        checkGameEnd();
+    } else {
         score -= 4;
         scoreDisplay.innerText = score;
-
         lockBoard = true;
 
         setTimeout(() => {
@@ -73,21 +83,20 @@ function checkMatch() {
     }
 }
 
-// Reset selected cards
 function resetTurn() {
     [firstCard, secondCard, lockBoard] = [null, null, false];
 }
 
-// Check if game is over
 function checkGameEnd() {
-    const flippedCards = document.querySelectorAll(".card.flipped");
-
-    if (flippedCards.length === cards.length) {
-        alert("🎉 You won! Final Score: " + score);
+    if (matches === symbols.length) {
+        alert("🎉 You won!");
     }
-
     if (score <= 0) {
-        alert("❌ Game Over! Score reached 0");
-        location.reload();
+        alert("❌ Game Over!");
+        initGame();
     }
 }
+
+restartBtn.addEventListener("click", initGame);
+
+initGame();
